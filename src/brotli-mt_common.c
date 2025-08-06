@@ -12,7 +12,7 @@
 #include "brotli/encode.h"
 #include "brotli/decode.h"
 
-#include "brotli-mt.h"
+#include "../include/brotli-mt.h"
 
 /* ****************************************
  * BROMT Error Management

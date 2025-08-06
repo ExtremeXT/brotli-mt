@@ -8,7 +8,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-#include "brotli-mt.h"
+#include "../include/brotli-mt.h"
 
 #define METHOD   "brotli"
 #define PROGNAME "brotli-mt"

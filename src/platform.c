@@ -11,7 +11,7 @@
  * - zstdmt source repository: https://github.com/mcmilk/zstdmt
  */
 
-#include "platform.h"
+#include "../include/platform.h"
 
 #if defined(_MSC_VER) || defined(__MINGW32__)
 int gettimeofday(struct timeval *tp, void *tzp)

@@ -22,7 +22,7 @@
  * http://www.cse.wustl.edu/~schmidt/win32-cv-1.html
  */
 
-#include "threading.h"
+#include "../include/threading.h"
 
 #include <process.h>
 #include <errno.h>

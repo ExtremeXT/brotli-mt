@@ -18,7 +18,7 @@
 extern "C" {
 #endif
 
-#include "../lib/memmt.h"
+#include "memmt.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>

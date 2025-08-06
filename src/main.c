@@ -15,7 +15,7 @@
  * gzip compatible wrapper for the compression types of this library
  */
 
-#include "platform.h"
+#include "../include/platform.h"
 
 #define MODE_COMPRESS    1	/* -z (default) */
 #define MODE_DECOMPRESS  2	/* -d */

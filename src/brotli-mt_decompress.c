@@ -16,10 +16,10 @@
 
 #include "brotli/decode.h"
 
-#include "brotli-mt.h"
-#include "memmt.h"
-#include "threading.h"
-#include "list.h"
+#include "../include/brotli-mt.h"
+#include "../include/memmt.h"
+#include "../include/threading.h"
+#include "../include/list.h"
 
 /**
  * multi threaded brotli - multiple workers version

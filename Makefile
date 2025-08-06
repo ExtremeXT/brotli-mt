@@ -20,11 +20,11 @@ LDFLAGS	= $(WIN_LDFLAGS) -lpthread
 all:	brotli-mt
 again:	clean brotli-mt
 
-ZSTDMTDIR = ../lib
-COMMON	= platform.c $(ZSTDMTDIR)/threading.c
+ZSTDMTDIR = src
+COMMON	= $(ZSTDMTDIR)/platform.c $(ZSTDMTDIR)/threading.c
 
 BRO_MT	= $(COMMON) $(ZSTDMTDIR)/brotli-mt_common.c $(ZSTDMTDIR)/brotli-mt_compress.c \
-	  $(ZSTDMTDIR)/brotli-mt_decompress.c brotli-mt.c
+	  $(ZSTDMTDIR)/brotli-mt_decompress.c $(ZSTDMTDIR)/brotli-mt.c
 
 
 # Brotli, https://github.com/google/brotli
