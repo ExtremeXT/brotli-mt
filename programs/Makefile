@@ -6,11 +6,12 @@
 # current versions we're using (tagged in their main repo)
 BRO_VER	= "v1.1.0"
 
-CC	= $(CROSS)gcc
+CC	= $(CROSS)clang
 RANLIB	= $(CROSS)ranlib
 STRIP	= $(CROSS)strip
 SFLAGS	= -R .note -R .comment
 CFLAGS	= -W -pthread -Wall -pipe
+CFLAGS	+= -flto
 CFLAGS	+= -fomit-frame-pointer
 CFLAGS	+= -Wno-implicit-fallthrough
 CFLAGS	+= -O3
