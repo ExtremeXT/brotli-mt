@@ -3,29 +3,19 @@
 # /TR 2024-02-02
 ##############################################################################
 
-# current versions we're using (tagged in their main repo)
-BRO_VER	= "v1.1.0"
+SUBMODULE_TAG := $(shell git -C brotli describe --tags --exact-match 2>/dev/null | xargs basename)
 
-CC	= $(CROSS)clang
-RANLIB	= $(CROSS)ranlib
-STRIP	= $(CROSS)strip
+CC	= clang
+RANLIB	= ranlib
+STRIP	= strip
 SFLAGS	= -R .note -R .comment
-CFLAGS	= -W -pthread -Wall -pipe
-CFLAGS	+= -flto
-CFLAGS	+= -fomit-frame-pointer
-CFLAGS	+= -Wno-implicit-fallthrough
-CFLAGS	+= -O3
-LDFLAGS	= $(WIN_LDFLAGS) -lpthread
+CFLAGS	= -W -pthread -Wall -pipe -flto -O3 -fomit-frame-pointer 
+LDFLAGS	= -lpthread
 
 all:	brotli-mt
 again:	clean brotli-mt
 
-ZSTDMTDIR = src
-COMMON	= $(ZSTDMTDIR)/platform.c $(ZSTDMTDIR)/threading.c
-
-BRO_MT	= $(COMMON) $(ZSTDMTDIR)/brotli-mt_common.c $(ZSTDMTDIR)/brotli-mt_compress.c \
-	  $(ZSTDMTDIR)/brotli-mt_decompress.c $(ZSTDMTDIR)/brotli-mt.c
-
+BROTLI_MT	= src/platform.c src/threading.c src/brotli-mt_common.c src/brotli-mt_compress.c src/brotli-mt_decompress.c src/brotli-mt.c
 
 # Brotli, https://github.com/google/brotli
 BRODIR	= brotli/c
@@ -66,23 +56,25 @@ endif # ifndef LIBBRO
 CF_BRO	= $(CFLAGS) -I$(BRODIR)/include
 
 # append lib include directory
-CFLAGS	+= -I. -I$(ZSTDMTDIR)
+CFLAGS	+= -Iinclude
 
 brotli-mt:
-	$(CC) $(CF_BRO) $(BRO_MT) -DVERSION='$(BRO_VER)' -o $@ $(LIBBRO) $(LDFLAGS) -lm
-	$(STRIP) $(SFLAGS) $@
+	@mkdir -p out
+	$(CC) $(CF_BRO) $(BROTLI_MT) -DVERSION=\"$(SUBMODULE_TAG)\" -o out/$@ $(LIBBRO) $(LDFLAGS) -lm
+	@$(STRIP) $(SFLAGS) out/$@
 
-# tests are unix / linux only
 tests:
+	@if [ ! -x ./out/brotli-mt ]; then \
+		echo "Error: brotli-mt hasn't been built yet!"; \
+		exit 1; \
+	fi
 	@dd if=/dev/urandom of=testbytes.raw bs=1M count=10 2>/dev/null
-	@for m in brotli ; do \
-	cat testbytes.raw | ./$$m-mt -z > compressed.$$m ; \
-	cat compressed.$$m | ./$$m-mt -d > testbytes-$$m.raw ; \
-	cmp testbytes.raw testbytes-$$m.raw && echo "SUCCESS: $$m" || echo "FAILING: $$m" ; \
-	rm compressed.$$m testbytes-$$m.raw ; \
-	done
-	@rm testbytes.raw
+	@cat testbytes.raw | ./out/brotli-mt -z > compressed.brotli
+	@cat compressed.brotli | ./out/brotli-mt -d > testbytes-brotli.raw
+	@cmp testbytes.raw testbytes-brotli.raw && echo "SUCCESS" || echo "FAILING"
+	@rm compressed.brotli testbytes-brotli.raw testbytes.raw
 
 clean:
-	@echo Cleaning built file...
-	@rm -f brotli-mt
+	@echo Cleaning output folder...
+	@rm -rf out
+
