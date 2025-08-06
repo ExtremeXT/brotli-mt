@@ -6,22 +6,14 @@
 # current versions we're using (tagged in their main repo)
 BRO_VER	= "v1.1.0"
 
-LN	= ln -sf
-#CC	= $(CROSS)musl-gcc
-#CC	= $(CROSS)clang
 CC	= $(CROSS)gcc
 RANLIB	= $(CROSS)ranlib
 STRIP	= $(CROSS)strip
 SFLAGS	= -R .note -R .comment
-
 CFLAGS	= -W -pthread -Wall -pipe
 CFLAGS	+= -fomit-frame-pointer
 CFLAGS	+= -Wno-implicit-fallthrough
 CFLAGS	+= -O3
-#CFLAGS	+= -flto
-#CFLAGS += -DDEBUGME
-#CFLAGS += -g
-#CFLAGS += -march=native
 LDFLAGS	= $(WIN_LDFLAGS) -lpthread
 
 all:	brotli-mt
@@ -75,11 +67,9 @@ CF_BRO	= $(CFLAGS) -I$(BRODIR)/include
 # append lib include directory
 CFLAGS	+= -I. -I$(ZSTDMTDIR)
 
-brotli-mt$(EXTENSION):
+brotli-mt:
 	$(CC) $(CF_BRO) $(BRO_MT) -DVERSION='$(BRO_VER)' -o $@ $(LIBBRO) $(LDFLAGS) -lm
 	$(STRIP) $(SFLAGS) $@
-	$(LN) -s $@ un$@
-	$(LN) -s $@ brotlicat-mt
 
 # tests are unix / linux only
 tests:
@@ -92,12 +82,6 @@ tests:
 	done
 	@rm testbytes.raw
 
-install:
-	echo TODO ;)
-
 clean:
-	rm -f brotli-mt
-	rm -f unbrotli-mt
-	rm -f brotlicat-mt
-
-mrproper: clean
+	@echo Cleaning built file...
+	@rm -f brotli-mt
