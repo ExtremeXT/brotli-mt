@@ -24,7 +24,7 @@ CFLAGS	+= -O3
 #CFLAGS += -march=native
 LDFLAGS	= $(WIN_LDFLAGS) -lpthread
 
-all:	loadsource brotli-mt
+all:	brotli-mt
 again:	clean brotli-mt
 
 ZSTDMTDIR = ../lib
@@ -81,9 +81,6 @@ brotli-mt$(EXTENSION):
 	$(LN) -s $@ un$@
 	$(LN) -s $@ brotlicat-mt
 
-loadsource:
-	test -d brotli || git clone https://github.com/google/brotli -b $(BRO_VER) --depth=1 brotli
-
 # tests are unix / linux only
 tests:
 	@dd if=/dev/urandom of=testbytes.raw bs=1M count=10 2>/dev/null
@@ -104,4 +101,3 @@ clean:
 	rm -f brotlicat-mt
 
 mrproper: clean
-	rm -rf brotli
