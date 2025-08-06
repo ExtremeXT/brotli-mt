@@ -711,7 +711,7 @@ static void treat_file(char *filename)
 
 	/* remove outfile with errors */
 	if (errmsg && !global_fout) {
-		fprintf(stderr, errmsg);
+		fprintf(stderr, "%s", errmsg);
 		remove(fn2);
 	}
 
